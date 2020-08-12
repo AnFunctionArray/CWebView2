@@ -183,6 +183,8 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="packages.config" />
     <None Include="PropertySheet.props" />
   </ItemGroup>
