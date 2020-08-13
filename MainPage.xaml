@@ -7,6 +7,6 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
 
-    <WebView2 x:Name="MyWebView" x:ConnectionId="2"
+    <WebView2 x:Name="MyWebView" 
         Source="https://www.microsoft.com" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 </Page>

@@ -18,7 +18,6 @@
 #include <Microsoft.UI.Xaml.XamlTypeInfo.h>
 #include <Microsoft.UI.Xaml.Markup.h>
 #include <Microsoft.UI.Xaml.Controls.h>
-#include <WebView2_p.h>
 
 #define startinfintiteloop for(;;)
 
@@ -69,60 +68,6 @@ static IInspectableVtbl mainframeoverridesvtbl = { QueryInterface, AddRef, Relea
 extern IInspectable* mainframeinner;
 
 BOOST_PP_REPEAT(6, createoverridestubs, mainframe)
-
-HRESULT InvokeWebView2StartNavigation(__RPC__in __FITypedEventHandler_2_Microsoft__CUI__CXaml__CControls__CWebView2_Microsoft__CUI__CXaml__CControls__CWebView2NavigationStartingEventArgs* This,
-	/* [in] */ __RPC__in_opt __x_Microsoft_CUI_CXaml_CControls_CIWebView2* sender,
-	/* [in] */ __RPC__in_opt __x_Microsoft_CUI_CXaml_CControls_CIWebView2NavigationStartingEventArgs* e)
-{
-	ICoreWebView2* pCoreWebView2;
-
-	__x_Microsoft_CUI_CXaml_CControls_CIWebView2* pwebview2;
-
-	extern IInspectable* pMyWebView;
-
-	IInspectable_QueryInterface(pMyWebView, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, &pwebview2);
-
-	char* pactualwebview = (char*)pwebview2 - 0x18;
-
-	pCoreWebView2 = *((char**)pactualwebview + 0x1B);
-
-	pCoreWebView2->lpVtbl->NavigateToString(pCoreWebView2, L"<html>Hello world!</html>");
-
-	extern EventRegistrationToken nocareonnvaigatedto;
-
-	pwebview2->lpVtbl->remove_NavigationStarting(pwebview2, nocareonnvaigatedto);
-
-	return S_OK;
-}
-
-EventRegistrationToken nocareonnvaigatedto;
-
-HRESULT OnNavigatedTo(
-	__x_Microsoft_CUI_CXaml_CControls_CIPageOverrides* This,
-	/* [in] */__x_Microsoft_CUI_CXaml_CNavigation_CINavigationEventArgs* e
-)
-{
-	ICoreWebView2* pCoreWebView2;
-
-	__x_Microsoft_CUI_CXaml_CControls_CIWebView2* pwebview2;
-
-	extern IInspectable* pMyWebView;
-
-	IInspectable_QueryInterface(pMyWebView, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, &pwebview2);
-
-	static __FITypedEventHandler_2_Microsoft__CUI__CXaml__CControls__CWebView2_Microsoft__CUI__CXaml__CControls__CWebView2NavigationStartingEventArgsVtbl
-		vtblforhandler = { QueryInterface, AddRef, Release, InvokeWebView2StartNavigation };
-
-	static const IID* implements[] = { &IID_IUnknown, &IID_IAgileObject, &IID_ICoreWebView2NavigationStartingEventHandler , 0 };
-
-	static struct standardinterfacepart handler = { &vtblforhandler , implements , 1, &handler, sizeof(char*) };
-
-	pwebview2->lpVtbl->add_NavigationStarting(pwebview2, &handler, &nocareonnvaigatedto);
-
-	//extern __x_Microsoft_CUI_CXaml_CControls_CIWebView2* webview2inner;
-
-	return S_OK;
-}
 
 static __x_Microsoft_CUI_CXaml_CControls_CIPageOverridesVtbl appmainpageoverridesvtbl = { QueryInterface, AddRef, Release, GetIids, GetRuntimeClassName, GetTrustLevel, stub, stub, stub };
 
@@ -269,10 +214,7 @@ HRESULT OnLaunched(
 	bool bSuccess;
 	debug = (pMainFrame)->lpVtbl->Navigate(pMainFrame, typePage, somearbitraryobject, &bSuccess);
 
-	debug =  __x_Microsoft_CUI_CXaml_CIWindow_put_Content(pCoreWindow, pMainFrame);	
-
-	//pCoreWebView2->lpVtbl->NavigateToString(pCoreWebView2, L"<html>Hello world!</html>");
-
+	debug =  __x_Microsoft_CUI_CXaml_CIWindow_put_Content(pCoreWindow, pMainFrame);
 	//setframe(pMainFrame);
 	return S_OK;
 }
@@ -286,7 +228,6 @@ initmainpagestatics()
 		stringheadcomponnnetconnector;
 
 	appmainpage.lpVtbl->QueryInterface = QueryInterfaceMainPage;
-	appmainpage.lpVtbl->OnNavigatedTo = OnNavigatedTo;
 
 	appmainpage.classname = createreference(L"CBackBone.MainPage", stringheadappmainpageoverridesimpl);
 	appmainpage.classname1 = createreference(L"CBackBone.MainPageFactory", stringgeadappmainpageoverridesfact);
