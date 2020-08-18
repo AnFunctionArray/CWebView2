@@ -23,6 +23,7 @@
     <None Include="packages.config" />
     <None Include="PropertySheet.props" />
     <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/x64\Debug\zlibd.dll" />
+    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
