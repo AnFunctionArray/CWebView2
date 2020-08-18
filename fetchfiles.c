@@ -21,8 +21,6 @@ struct getbufferandsizeAsynchandler {
 		__FIAsyncOperationCompletedHandler_1_Windows__CStorage__CStreams__CIBufferVtbl* pVtbl1; const IID* implements1; ULONG count1; char* pBase1;
 		size_t szExternal1; HSTRING classname1;
 		HRESULT(*QueryInterfaceHookOnMatch1)(struct standardinterfacepart* This, REFIID riid, char** ppvObject);
-		//IUnknownVtbl* pVtbl2; const IID* implements2; ULONG count2; char* pBase2; size_t szExternal2;
-		//HRESULT(*QueryInterfaceHookOnMatch2)(struct standardinterfacepart* This, REFIID riid, char** ppvObject);
 		struct externaldata {
 			char* markend;
 			HANDLE hWaitEvent; struct szandbuffer result; HSTRING filename;
@@ -65,20 +63,12 @@ HRESULT CollectAFIleBuffer(struct standardinterfacepart* This,
 
 	if (!pBuffer) return S_OK;
 
-	IAsyncInfo* pAsyncInfo; AsyncStatus asyncstatus;
-
-	//HRESULT debug = __FIAsyncOperation_1_Windows__CStorage__CStorageFile_QueryInterface(This->pAsyncOp1, &IID_IAsyncInfo, &pAsyncInfo);
-
-	//IAsyncInfo_Close(pAsyncInfo);
-
 	
 	struct szandbuffer ret = getbufferandsz(pBuffer);
 
 	This->result = ret;
 
 	This->callback(ret, This->callbackparam, This->filename);
-
-	//SetEvent(This->hWaitEvent);
 
 	return S_OK;
 }
@@ -94,36 +84,13 @@ HRESULT CollectAFile(struct getbufferandsizeAsynchandler* This,
 
 	if (!pStorageFile) return S_OK;
 
-	IAsyncInfo* pAsyncInfo; AsyncStatus asyncstatus;
-
-	//HRESULT debug = __FIAsyncOperation_1_Windows__CStorage__CStorageFile_QueryInterface(This->pAsyncOp, &IID_IAsyncInfo, &pAsyncInfo);
-
-	//IAsyncInfo_Close(pAsyncInfo);
-
-	//if (!pStorageFile) //if unsucessfull try again
-		//return getbufferandsizeAsync(This->filename, This, This->lpVtbl), S_OK;
-
-	__FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer* pBufferFileOperation, * pBufferFileOperation1;
-
-	//_x_ABI_CWindows_CStorage_CIFileIOStatics* pFileStatics1;
-
-	//__x_ABI_CWindows_CStorage_CIFileIOStatics_QueryInterface(pFileStatics, &IID___x_ABI_CWindows_CStorage_CIFileIOStatics, &pFileStatics1);
+	__FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer* pBufferFileOperation;
 
 	HRESULT debug = __x_ABI_CWindows_CStorage_CIFileIOStatics_ReadBufferAsync(pFileStatics, pStorageFile, &pBufferFileOperation);
 
 	This->pAsyncOp1 = pBufferFileOperation;
 
-	//__FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer_GetResults(pBufferFileOperation, &This[1].result);
-
-	//debug = __FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer_QueryInterface(pBufferFileOperation, &IID___FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer, &pBufferFileOperation1);
-
 	debug = __FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer_put_Completed(pBufferFileOperation, This);
-
-	debug = __FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer_QueryInterface(pBufferFileOperation, &IID_IAsyncInfo, &pAsyncInfo);
-
-	IAsyncInfo_get_Status(pAsyncInfo, &asyncstatus);
-
-	//debug = __FIAsyncOperation_1_Windows__CStorage__CStreams__CIBuffer_Release(pBufferFileOperation);
 
 	return S_OK;
 }
@@ -173,40 +140,12 @@ getbufferandsizeAsync(HSTRING filename, int callback(struct szandbuffer), char *
 		pOwnHandler, sizeof(struct externaldata),
 		0, .pVtbl1 = pOwnVtbl1, implements1, 1,
 		pOwnHandler, sizeof(struct externaldata),
-		0,//, pOwnVtbl1,& IID_IUnknown, 1, pOwnHandler,sizeof(struct externaldata), 0,
-		/*.hWaitEvent = CreateEvent(0, false, false, 0),*/ .filename = filename, .pAsyncOp = pStorageFileOperation,
+		0, .filename = filename, .pAsyncOp = pStorageFileOperation,
 		.pRoot = pOwnHandler, .callback = callback, .callbackparam = callbackparam };
 
 	storageoperationhandler = localstorageoperationhandler;
 
-	//__FIAsyncOperation_1_Windows__CStorage__CStorageFile_AddRef(pStorageFileOperation);
-
-	//__FIAsyncOperationCompletedHandler_1_Windows__CStorage__CStorageFile_AddRef(pOwnHandler);
-
-	//__FIAsyncOperation_1_Windows__CStorage__CStorageFile_GetResults(pStorageFileOperation, &pOwnHandler->result);
-
-	//if (__FIAsyncOperation_1_Windows__CStorage__CStorageFile_GetResults(pStorageFileOperation, &storageoperationhandler->CollectAFileForExampleResult) != S_OK)
-	//__FIAsyncOperation_1_Windows__CStorage__CStorageFile_QueryInterface(pStorageFileOperation, &IID___FIAsyncOperation_1_Windows__CStorage__CStorageFile, &pStorageFileOperation1);
 	__FIAsyncOperation_1_Windows__CStorage__CStorageFile_put_Completed(pStorageFileOperation, pOwnHandler);
-	//__FIAsyncOperation_1_Windows__CStorage__CStorageFile_QueryInterface(pStorageFileOperation, &IID___FIAsyncOperation_1_Windows__CStorage__CStorageFile, &pStorageFileOperation2);
-
-#if 0
-	char* p;
-
-	__FIAsyncOperation_1_Windows__CStorage__CStorageFile_get_Completed(pStorageFileOperation, &p);
-
-	IAsyncInfo* pAsyncInfo; AsyncStatus asyncstatus;
-
-	debug = __FIAsyncOperation_1_Windows__CStorage__CStorageFile_QueryInterface(pStorageFileOperation, &IID_IAsyncInfo, &pAsyncInfo);
-#endif
-	//for(;;)
-
-	//IAsyncInfo_get_Status(pAsyncInfo, &asyncstatus),
-
-	//IAsyncInfo_get_ErrorCode(pAsyncInfo, &debug);
-
-	//__FIAsyncOperation_1_Windows__CStorage__CStorageFile_Release(pStorageFileOperation);
-		//WaitForSingleObject(storageoperationhandler->hWaitEvent, INFINITE);
 }
 
 initfilestatics()

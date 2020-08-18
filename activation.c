@@ -8,7 +8,6 @@
 #include <Windows.Applicationmodel.Activation.h>
 #include <Windows.ApplicationModel.core.h>
 #define ENABLE_WINRT_EXPERIMENTAL_TYPES
-//#include "onlywhatweneed.h
 #include <Microsoft.UI.Xaml.h>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
@@ -56,14 +55,6 @@ struct appinterface* outterappoverrides;
 
 static __x_Microsoft_CUI_CXaml_CIApplicationOverridesVtbl overridesvtbl;
 
-//const size_t nheadmethods = &overridesvtbl.OnActivated - &overridesvtbl;
-
-const size_t noverrides = sizeof * innerappoverrides->lpVtbl / sizeof(char (*)()) - 6;
-
-//BOOST_PP_REPEAT(16, declareoverridestubs, (appoverrides, 6))
-
-//BOOST_PP_REPEAT(6, defineoverridestubscommon, appoverrides)
-
 __x_Microsoft_CUI_CXaml_CIWindow* pCoreWindow;
 
 HRESULT OnWindowCreated(
@@ -87,29 +78,13 @@ HRESULT InvokeApp(
 	return S_OK;
 }
 
-IActivationFactory* pxamlcontrolsresActivFactory;
-
-HRESULT QueryInterfaceApp(This, riid, ppvObject)
-struct appinterface* This; REFIID riid; char** ppvObject;
-{
-	if (QueryInterface(This, riid, ppvObject) == S_OK)
-		return S_OK;
-	return IUnknown_QueryInterface(innerappoverrides, riid, ppvObject);
-}
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
 	extern Run();
 
-	//startinfintiteloop;
-
-	//RaiseFailFastException(0, 0, 0);
-
 	RoInitialize(RO_INIT_MULTITHREADED);
 
 	HSTRING_HEADER strhead;
-
-	HRESULT debug = RoGetActivationFactory(createreference(RuntimeClass_Microsoft_UI_Xaml_Controls_XamlControlsResources, strhead), &IID_IActivationFactory, &pxamlcontrolsresActivFactory);
 
 	initmetadatastatics(), initmainpagestatics(), initfilestatics();
 
@@ -129,15 +104,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 	const static IID* implementsappmetadataprovider[] = { &IID___x_Microsoft_CUI_CXaml_CMarkup_CIXamlMetadataProvider,
 	&IID_IUnknown, &IID_IInspectable,&IID_IAgileObject, 0 };
 
-	BOOST_PP_REPEAT(10, initvtblwithstubs, (6, appoverrides));
-
 	extern
 		HRESULT OnLaunched(
 			__x_Microsoft_CUI_CXaml_CIApplicationOverrides * This,
 			/* [in] */__x_Microsoft_CUI_CXaml_CILaunchActivatedEventArgs * args
 		);
 
-	//appoverridesvtbl.QueryInterface = QueryInterfaceApp;
+
 	appoverridesvtbl.OnLaunched = OnLaunched;
 	appoverridesvtbl.OnWindowCreated = OnWindowCreated;
 
@@ -167,7 +140,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	activateclassdirect(RuntimeClass_Microsoft_UI_Xaml_Application, pAppStatics, IID___x_Microsoft_CUI_CXaml_CIApplicationStatics);
 
-	//Sleep(-1);
+
 	__x_Microsoft_CUI_CXaml_CIApplicationStatics_Start(pAppStatics, &appinterface);
 
 

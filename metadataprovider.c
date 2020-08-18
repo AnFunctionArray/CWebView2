@@ -11,7 +11,6 @@
 #include <Windows.ApplicationModel.core.h>
 #include <Windows.UI.Core.h>
 #define ENABLE_WINRT_EXPERIMENTAL_TYPES
-//#include "onlywhatweneed.h
 #include <Microsoft.UI.Xaml.h>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <Unknwn.h>
@@ -262,7 +261,6 @@ HRESULT CreateFromString(
 
 	HRESULT debug = __x_ABI_CWindows_CFoundation_CIPropertyValueStatics_CreateString(pPropValueStatics, value, result);
 
-	//*result = 0;
 	return S_OK;
 }
 HRESULT GetMember(
@@ -410,11 +408,6 @@ int set_data_bool(IInspectable* instance, IInspectable* value, size_t where, con
 addXamlControlsResourcestodict(instance, key, item)
 IInspectable* instance, * key, * item;
 {
-	//__x_Microsoft_CUI_CXaml_CControls_CIXamlControlsResources* pXamlCtrlRes;
-
-	//IInspectable_QueryInterface(instance, &IID___x_Microsoft_CUI_CXaml_CControls_CIXamlControlsResources, &pXamlCtrlRes);
-
-	//__debugbreak();
 }
 
 IInspectable* XamlControlResourceinit()
@@ -422,7 +415,6 @@ IInspectable* XamlControlResourceinit()
 	__x_Microsoft_CUI_CXaml_CControls_CIXamlControlsResources* pXamlCtrlRes;
 	extern IActivationFactory* pxamlcontrolsresActivFactory;
 	activateclasslight2(RuntimeClass_Microsoft_UI_Xaml_Controls_XamlControlsResources, pXamlCtrlRes, IID___x_Microsoft_CUI_CXaml_CControls_CIXamlControlsResources, 0);
-	//Sleep(10000);
 	return pXamlCtrlRes;
 }
 
@@ -446,8 +438,6 @@ __x_Microsoft_CUI_CXaml_CControls_CIWebView2 * innerwebview2;
 
 __x_Microsoft_CUI_CXaml_CControls_CIWebView2* pWebView2 = 0;
 
-//BOOST_PP_REPEAT(6, defineoverridestubscommon, webview2)
-
 HRESULT QueryInterfaceWebView2Fact(This, riid, ppvObject)
 
 struct standardinterfacepart* This; REFIID riid; char** ppvObject;
@@ -470,215 +460,26 @@ HMODULE GetKernelModule()
 }
 
 
-static HRESULT Invokewebnavcompleted
-(__RPC__in __FITypedEventHandler_2_Microsoft__CUI__CXaml__CControls__CWebView2_Microsoft__CUI__CXaml__CControls__CWebView2NavigationCompletedEventArgs* This,
-	/* [in] */ __RPC__in_opt __x_Microsoft_CUI_CXaml_CControls_CIWebView2* sender,
-	/* [in] */ __RPC__in_opt __x_Microsoft_CUI_CXaml_CControls_CIWebView2NavigationCompletedEventArgs* e)
-{
-	HRESULT debug;
-
-	ICoreWebView2* pCoreWebView2;
-
-	ULONG iidcount;
-
-	IID* pIIDs;
-
-	innerwebview2->lpVtbl->GetIids(sender, &iidcount, &pIIDs);
-
-	__x_Microsoft_CUI_CXaml_CControls_CIWebView2* pWebView;
-
-	__x_Microsoft_CUI_CXaml_CIUIElement* puielem;
-
-	IInspectable_QueryInterface(sender, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, &pWebView);
-
-	IInspectable_QueryInterface(sender, &IID___x_Microsoft_CUI_CXaml_CIUIElement, &puielem);
-
-	__x_Microsoft_CUI_CXaml_CIXamlRoot* pxamlr;
-
-	puielem->lpVtbl->get_XamlRoot(puielem, &pxamlr);
-
-	extern const IID IID_IXamlRootNative;
-
-	IInspectable* pxamlrnat;
-
-	HWND hxaml;
-
-	IInspectable_QueryInterface(pxamlr, &IID_IXamlRootNative, &pxamlrnat);
-
-	debug = 3[(HRESULT(**)(char*, HWND*))pxamlrnat->lpVtbl](pxamlrnat, &hxaml);
-	static HSTRING_HEADER head;
-
-	//__x_Microsoft_CUI_CXaml_CControls_CIWebView2_NavigateToString(pWebView, createreference(L"<html>Hello world!</html>", head));
-
-	HMODULE hMod = GetKernelModule();
-
-	IInspectable* (*getwebview2provider)(char*, HWND, IInspectable**) = (char*)((HMODULE(*)())GetProcAddress(hMod, "GetModuleHandleW"))(L"Microsoft.UI.Xaml.Controls.dll") + 0x2cfe38;//0x2D0278;
-
-	IInspectable* webview2provider;
-
-	IUnknown* punkncorewindow;
-
-	__x_Microsoft_CUI_CXaml_CIWindow* pCoreWindow;
-
-	extern const IID IID_ICoreWindowInterop;
-
-	ICoreWindowInterop* pCoreWindowInterop;
-
-	__x_ABI_CWindows_CUI_CCore_CICoreWindowStatic* pcorwinstatics;
-
-	activateclassdirect(RuntimeClass_Windows_UI_Core_CoreWindow, pcorwinstatics, IID___x_ABI_CWindows_CUI_CCore_CICoreWindowStatic);
-
-	pcorwinstatics->lpVtbl->GetForCurrentThread(pcorwinstatics, &pCoreWindow);
-
-	debug = pCoreWindow->lpVtbl->QueryInterface(pCoreWindow, &IID_IUnknown, &punkncorewindow);
-
-	debug = punkncorewindow->lpVtbl->QueryInterface(punkncorewindow, &IID_ICoreWindowInterop, &pCoreWindowInterop);
-
-	HWND hCurrentWnd;
-
-	pCoreWindowInterop->lpVtbl->get_WindowHandle(pCoreWindowInterop, &hCurrentWnd);
-
-	WCHAR classname[256];
-
-	char* pactualwebview = (char*)pWebView - 0x18;
-
-	//GetClassNameW(*((HWND*)pactualwebview + 0x29), classname, 256);
-
-	//getwebview2provider(pactualwebview, &webview2provider, *((HWND*)pactualwebview + 0x29));
-
-	webview2provider = *((char**)pactualwebview + 0x1B);// 0xD0);
-
-	pCoreWebView2 = webview2provider;//(char*)pWebView + 0x20;
-
-	//for (IInspectable* p = *(char **)pactualwebview; ; ++p)
-		__try
-	{
-		//if (webview2provider->lpVtbl->QueryInterface(webview2provider, &IID_ICoreWebView2, &pCoreWebView2) == S_OK)
-			//return S_OK;
-	}
-	__except(EXCEPTION_EXECUTE_HANDLER) {}
-
-	pCoreWebView2->lpVtbl->NavigateToString(pCoreWebView2, L"<html>Hello world!</html>");
-
-	return S_OK;
-
-	IWeakReferenceSource* pweakrefsrc;
-
-	IWeakReference* pweakref;
-
-	IInspectable* pref, *pref1;
-
-	pref = sender;
-
-	for (;;)
-	{
-		HRESULT debug = IInspectable_QueryInterface(pref, &IID_IWeakReferenceSource, &pweakrefsrc);
-
-		debug = pweakrefsrc->lpVtbl->GetWeakReference(pweakrefsrc, &pweakref);
-
-		debug = IInspectable_QueryInterface(pweakref, &IID_ICoreWebView2, &pCoreWebView2);
-
-		debug = pweakref->lpVtbl->Resolve(pweakref, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, &pref);
-
-		debug = IInspectable_QueryInterface(pref, &IID_ICoreWebView2, &pCoreWebView2);
-
-		debug = IInspectable_QueryInterface(pref, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, &pref1);
-
-		pref->lpVtbl->GetIids(pref1, &iidcount, &pIIDs);
-	}
-	
-	return S_OK;
-}
-
-
-__FITypedEventHandler_2_Microsoft__CUI__CXaml__CControls__CWebView2_Microsoft__CUI__CXaml__CControls__CWebView2NavigationCompletedEventArgsVtbl webview2navcompletedhandler = {
-	QueryInterface, AddRef, Release, Invokewebnavcompleted
-};
-
-const static IID* implementswebnavcompletedhandler[] = { &IID_IInspectable, &IID_IUnknown,&IID_IAgileObject,
-&IID_ICoreWebView2NavigationCompletedEventHandler, 0 };
-
-struct standardinterfacepart webnavcompletedhandler = {&webview2navcompletedhandler, implementswebnavcompletedhandler,
-	1, &webnavcompletedhandler,};
-
-
 IInspectable* initwebview2()
 {
-	//startinfintiteloop;
-	//Sleep(600000);
-	//*(char*)initwebview2 = 0;
-
 	__x_Microsoft_CUI_CXaml_CControls_CIWebView2Factory* pWebView2Fact;
 
 	IActivationFactory* pObjInspect;
 
-	//BOOST_PP_REPEAT(6, initvtblwithstubs, webview2)
 
-		HSTRING_HEADER headstr;
+	HSTRING_HEADER headstr;
 
 	HRESULT debug = RoGetActivationFactory(createreference(RuntimeClass_Microsoft_UI_Xaml_Controls_WebView2, headstr),
 		&IID_IActivationFactory, &pObjInspect);
 
-	//webview2.lpVtbl = 0;
-
-	extern __x_Microsoft_CUI_CXaml_CIApplication* pApp;
-
 	debug = IInspectable_QueryInterface(pObjInspect, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2Factory, &pWebView2Fact);
-	//debug = IActivationFactory_ActivateInstance(pObjInspect, &webview2);
+
+
 	debug = __x_Microsoft_CUI_CXaml_CControls_CIWebView2Factory_CreateInstance(pWebView2Fact, 0
 		, 0, &pWebView2);
 
 
-	//BOOST_PP_REPEAT(6, initvtblwithstubs, webview2);
-
-	//webview2.lpVtbl->QueryInterface = QueryInterfaceWebView2Fact;
-
-	//(pWebView2Fact)->lpVtbl->CreateInstance(pWebView2Fact, &webview2, &innerwebview2, &pWebView2);
-
-	//EventRegistrationToken sometoken;
-
-	//debug = webview2inner->lpVtbl->add_NavigationCompleted(webview2inner, &webnavcompletedhandler, &sometoken);
-
 	return pWebView2;
-/*
-	ULONG iidcount;
-
-	IID* pIIDs;
-
-	webview2inner->lpVtbl->GetIids(webview2inner2, &iidcount, &pIIDs);
-
-	__x_Microsoft_CUI_CXaml_CControls_CIAnimatedVisualPlayer* pAvp;
-
-	debug = IInspectable_QueryInterface(webview2inner, &IID___x_Microsoft_CUI_CXaml_CControls_CIAnimatedVisualPlayer, &pAvp);
-
-	__x_Microsoft_CUI_CXaml_CControls_CIAnimatedVisualSource* pSrc;
-
-	debug = pAvp->lpVtbl->get_Source(pAvp, &pSrc);
-
-	ICoreWebView2* pCoreWebView2;
-
-	debug = IInspectable_QueryInterface(pSrc, &IID_ICoreWebView2, &pCoreWebView2);
-
-	/*ICoreWebView2* pCoreWebView2;
-
-	debug = IInspectable_QueryInterface(webview2inner2, &IID_ICoreWebView2, &pCoreWebView2);
-
-	//MULTI_QI pCoreWebView2arr[1];
-
-	//debug = CoCreateInstanceFromApp(&LIBID_WebView2, 0, CLSCTX_INPROC_SERVER, 0, 1, pCoreWebView2);
-
-	//pCoreWebView2 = pCoreWebView2arr->pItf;
-	ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerVtbl handlervtbl = { QueryInterface, AddRef, Release, }
-	struct standardinterfacepart handler
-
-	CreateCoreWebView2EnvironmentWithOptions(0, 0, 0, )
-
-	debug = IInspectable_QueryInterface(pCoreWebView2, &IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, &pWebView2);*/
-
-	//return pWebView2;
-	//activateclassdirect(RuntimeClass_Microsoft_UI_Xaml_Controls_WebView2, pWebView2, IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2);
-	//return webview2inner;
-
 }
 
 initmetadatastatics()

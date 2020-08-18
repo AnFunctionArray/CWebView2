@@ -62,14 +62,12 @@ activateclasslight2(name, sizeofname, ptr, piid) const wchar_t* name; size_t siz
 	WindowsCreateStringReference(name, sizeofname / sizeof(wchar_t) - 1, &header, &string);
 
 	HRESULT debug;
-	//if (!activfact)
+
 	debug = RoGetActivationFactory(string, &IID_IActivationFactory, &activfact);
 
 	debug = IActivationFactory_ActivateInstance(activfact, &pObjInspect);
 
 	IInspectable_QueryInterface(pObjInspect, piid, ptr);
-
-	//IInspectable_Release(pObjInspect);
 }
 
 
@@ -93,12 +91,12 @@ ULONG AddRef(struct standardinterfacepart* This)
 ULONG Release(struct standardinterfacepart* This)
 {
 	ULONG refCount;
-	//InterlockedIncrement(&This->count);
+
 	refCount = This->count;
 	InterlockedDecrement(&This->count);
 	InterlockedDecrement(&refCount);
 	if (refCount == 0)
-		return free(This), 0;//This->lpVtblornull = 0, 0;//free(This), 0;
+		return free(This), 0;
 
 	return refCount;
 }
@@ -139,38 +137,9 @@ HRESULT GetTrustLevel(
 
 bool implementscurrent(struct standardinterfacepart* This, const IID* riid)
 {
-	//This = This->pBase;
-
-	//for (; This->lpVtblornull; ++This)
 	for (const IID** implements = This->implements; *implements; ++implements)
 		if (!memcmp(riid, *implements, sizeof * riid)) return true;
 	return false;
-}
-
-extern HRESULT QueryInterface();
-static IInspectableVtbl commonimplvtbl = { QueryInterface, AddRef, Release, GetIids, GetRuntimeClassName, GetTrustLevel };
-
-HRESULT commonstubhook(p, pp, ppp, n, pinner)
-IInspectable* p, * pinner, ** ppp; char* pp; int n;
-{
-	assert(implementscurrent(p, &IID_IInspectable) && n < 6 || implementscurrent(p, &IID_IUnknown) && n < 3);
-
-	HRESULT innerhres;
-
-	if (pinner)
-	{
-		return innerhres = n[(HRESULT(**)()) pinner->lpVtbl](pinner, pp, ppp);
-		/*if (!n)
-		{
-			const IID* RefIId = pp;
-
-			if (innerhres == S_OK && !implementscurrent(p, RefIId))
-
-				return innerhres;
-			else if(*ppp) IUnknown_Release(*ppp);
-		}*/
-	}
-	return n[(HRESULT(**)()) & commonimplvtbl](p, pp, ppp);
 }
 
 fixupnewthis(struct standardinterfacepart* NewThis)
@@ -190,33 +159,17 @@ size_t queyobjbasesize(struct standardinterfacepart* This)
 HRESULT QueryInterface(This, riid, ppvObject) //query for our own handlers
 struct standardinterfacepart* This; REFIID riid; char** ppvObject;
 {
+	HRESULT debug;
+
 	if (!ppvObject) return E_POINTER;
 
 	struct standardinterfacepart* NewThis = This;
 
 	size_t szObject;
 
-	size_t debug;
-
-	/*if (!memcmp(riid, &IID_IUnknown, sizeof * riid) ||
-		!memcmp(riid, &IID_IInspectable, sizeof * riid))
-
-		return szObject = (debug = queyobjbasesize(This)) * sizeof *This + This->szExternal,
-		//NewThis = malloc(szObject), memcpy(NewThis, This, szObject),
-		//NewThis->count = 0,
-		//NewThis->bIsNewMem = true,
-		//NewThis->lpVtblornull->AddRef(NewThis),
-		*ppvObject = This, S_OK;*/
-
 	* ppvObject = 0;
 
 	This = This->pBase;
-
-	//#define MAX_INTERFACE_SIZE_IN_LONGLONG 50
-
-		//const IID zeroIID = { 0 };
-
-		//static __declspec(thread) long long chBuffer[MAX_INTERFACE_SIZE_IN_LONGLONG];
 
 	for (; This->lpVtblornull; ++This)
 		for (const IID** implements = This->implements; *implements; ++implements)
@@ -226,8 +179,6 @@ struct standardinterfacepart* This; REFIID riid; char** ppvObject;
 				memcpy(NewThis, This->pBase, szObject),
 				This = This - This->pBase + NewThis,
 				fixupnewthis(NewThis) : 0,
-				//NewThis->count = 0,
-				//NewThis->bIsNewMem = true,
 				This->lpVtblornull->AddRef(This),
 				* ppvObject = This,
 				This->QueryInterfaceHookOnMatch
@@ -243,7 +194,7 @@ IInspectable* getinnerpointer(struct standardinterfacepart* This)
 	return 1[&This->lpVtblornull];
 }
 
-HRESULT QueryInterfaceWithInner(This, riid, ppvObject) //query for our own handlers
+HRESULT QueryInterfaceWithInner(This, riid, ppvObject)
 struct standardinterfacepart* This; REFIID riid; char** ppvObject;
 {
 	if (QueryInterface(This, riid, ppvObject) == S_OK)

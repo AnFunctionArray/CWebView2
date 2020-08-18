@@ -197,9 +197,6 @@
     <None Include="packages.config" />
     <None Include="PropertySheet.props" />
   </ItemGroup>
-  <ItemGroup>
-    <MASM Include="common_asm.asm" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <!--Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets')" /-->

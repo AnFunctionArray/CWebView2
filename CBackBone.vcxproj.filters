@@ -27,7 +27,4 @@
   <ItemGroup>
     <ClInclude Include="common.h" />
   </ItemGroup>
-  <ItemGroup>
-    <MASM Include="common_asm.asm" />
-  </ItemGroup>
 </Project>
