@@ -43,6 +43,12 @@ GEN_IID_FROM_STRING("3cd2ad98-88a7-41ab-ad5b-64d7a9a219aa", mainpage)
 
 GEN_IID_FROM_STRING("64BD43F8-BFEE-4EC4-B7EB-2935158DAE21", unknownforreal)
 
+GEN_IID_FROM_STRING("6B5E0516-DE96-4F0A-8D57-DCC9DAE36C76", __x_ABI_CWindows_CSecurity_CCryptography_CCore_CIHashAlgorithmNamesStatics)
+
+GEN_IID_FROM_STRING("9FAC9741-5CC4-4336-AE38-6212B75A915A", __x_ABI_CWindows_CSecurity_CCryptography_CCore_CIHashAlgorithmProviderStatics)
+
+GEN_IID_FROM_STRING("320B7E22-3CB0-4CDF-8663-1D28910065EB", __x_ABI_CWindows_CSecurity_CCryptography_CICryptographicBufferStatics)
+
 GEN_IID_FROM_STRING("629BDBC8-D932-4FF4-96B9-8D96C5C1E858", __x_ABI_CWindows_CFoundation_CIPropertyValueStatics)
 
 GEN_IID_FROM_STRING("53A3070F-19D9-59BC-BDD6-4DBF139E7DA5", __x_Microsoft_CUI_CXaml_CControls_CIFrameFactory)

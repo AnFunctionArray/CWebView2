@@ -52,6 +52,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -116,6 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="common.h" />
     <ClInclude Include="MainPage.h">
       <DependentUpon>MainPage.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -154,12 +156,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="common.c" />
     <ClCompile Include="commonactivation.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="fetchfiles.c" />
     <ClCompile Include="Generated Files\WebView2_i.c" />
     <ClCompile Include="iidsdef.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -193,11 +197,17 @@
     <None Include="packages.config" />
     <None Include="PropertySheet.props" />
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="common_asm.asm" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <!--Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets')" /-->
     <Import Project="packages\Microsoft.WinUI.3.0.0-preview2.200713.0\build\native\Microsoft.WinUI.targets" Condition="Exists('packages\Microsoft.WinUI.3.0.0-preview2.200713.0\build\native\Microsoft.WinUI.targets')" />
     <Import Project="packages\boost.1.72.0.0\build\boost.targets" Condition="Exists('packages\boost.1.72.0.0\build\boost.targets')" />
+    <Import Project="packages\zlib_native.redist.1.2.11\build\native\zlib_native.redist.targets" Condition="Exists('packages\zlib_native.redist.1.2.11\build\native\zlib_native.redist.targets')" />
+    <Import Project="packages\zlib_native.1.2.11\build\native\zlib_native.targets" Condition="Exists('packages\zlib_native.1.2.11\build\native\zlib_native.targets')" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -206,5 +216,7 @@
     <Error Condition="!Exists('packages\Microsoft.WinUI.3.0.0-preview2.200713.0\build\native\Microsoft.WinUI.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.WinUI.3.0.0-preview2.200713.0\build\native\Microsoft.WinUI.props'))" />
     <Error Condition="!Exists('packages\Microsoft.WinUI.3.0.0-preview2.200713.0\build\native\Microsoft.WinUI.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.WinUI.3.0.0-preview2.200713.0\build\native\Microsoft.WinUI.targets'))" />
     <Error Condition="!Exists('packages\boost.1.72.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost.1.72.0.0\build\boost.targets'))" />
+    <Error Condition="!Exists('packages\zlib_native.redist.1.2.11\build\native\zlib_native.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib_native.redist.1.2.11\build\native\zlib_native.redist.targets'))" />
+    <Error Condition="!Exists('packages\zlib_native.1.2.11\build\native\zlib_native.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib_native.1.2.11\build\native\zlib_native.targets'))" />
   </Target>
 </Project>

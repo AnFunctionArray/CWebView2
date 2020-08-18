@@ -31,20 +31,7 @@
 
 #include <corewindow.h>
 #include <Windows.h>
-#define startinfintiteloop for(;;)
-
-#define activateclassdirect(name, ptr, iid) activateclassdirect((name), sizeof (name), &(ptr), &(iid))
-
-#define activateclasslight(name, ptr, iid) activateclasslight((name), sizeof (name), &(ptr), &(iid))
-
-#define activateclasslight2(name, ptr, iid, activfact)  \
-activateclasslight2((name), sizeof (name), &(ptr), &(iid), ((char*)activfact))
-
-
-extern QueryInterface(), stub(), AddRef(), Release(), GetIids(),
-GetRuntimeClassName(), GetTrustLevel();
-
-extern HSTRING createreference();
+#include "common.h"
 
 extern struct xamlinterfacetype* metadata;
 
@@ -130,6 +117,7 @@ size_t nmembermetadata;
 	struct xamlmemberinterfacetype* This,
 	/* [retval, out] */__x_Microsoft_CUI_CXaml_CMarkup_CIXamlType** value
 ) {
+	IUnknown_AddRef(This->pType);
 	*value = This->pType;
 	return S_OK;
 }
@@ -155,6 +143,7 @@ HRESULT SetValue(
 	/* [retval, out] */__x_Microsoft_CUI_CXaml_CMarkup_CIXamlType** value
 ) {
 	*value = metadata + This->baseTypeIndex;
+	IInspectable_AddRef(*value);
 	if (*value < metadata)
 		*value = 0;
 	return S_OK;
@@ -351,6 +340,8 @@ IInspectable* get_data_webview2_Uri(IInspectable* instance)
 
 int set_data_webview2_Uri(IInspectable* instance, IInspectable* value)
 {
+	HRESULT debug;
+
 	__x_ABI_CWindows_CFoundation_CIUriRuntimeClass* pIn;
 
 	__x_ABI_CWindows_CFoundation_CIPropertyValue* pInpropval;
@@ -375,7 +366,7 @@ int set_data_webview2_Uri(IInspectable* instance, IInspectable* value)
 
 	__x_ABI_CWindows_CFoundation_CIUriRuntimeClassFactory_CreateUri(pUriFact, pUristr, &pUri);
 
-	__x_Microsoft_CUI_CXaml_CControls_CIWebView2_put_Source(pWebView2, pUri);
+	debug = __x_Microsoft_CUI_CXaml_CControls_CIWebView2_put_Source(pWebView2, pUri);
 }
 
 IInspectable* get_data_bool(IInspectable* instance, size_t where, const IID* pInterface)
@@ -437,8 +428,7 @@ IInspectable* XamlControlResourceinit()
 
 static IInspectableVtbl webview2vtbl = { QueryInterface, AddRef, Release, GetIids, GetRuntimeClassName, GetTrustLevel };
 
-const static IID* implementsmainframe[] = { &IID_IInspectable, &IID_IUnknown,&IID_IAgileObject, 
-&IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2, & IID_ICoreWebView2, 0 };
+const static IID* implementsmainframe[] = { &IID_IInspectable, &IID_IUnknown,&IID_IAgileObject, 0 };
 
 
 struct standardinterfacepart {
@@ -447,29 +437,16 @@ struct standardinterfacepart {
 	size_t szExternal; HSTRING classname;
 	HRESULT(*QueryInterfaceHookOnMatch)(struct xamlinterfacetype* This,
 		REFIID riid, char** ppvObject), *pmarkend;
-}webview2 = { &webview2vtbl, implementsmainframe, 1, &webview2,
-	sizeof(char*), };
+}webview2 = { &webview2vtbl, implementsmainframe, 1, &webview2, };
+
+struct standardinterfacepart* outterwebview2 = &webview2;
 
 IInspectable* webview2inner2;
-__x_Microsoft_CUI_CXaml_CControls_CIWebView2 *webview2inner;
-
-#define initvtblwithstubs1(z, n, text) n##[(int (**)())(text.lpVtbl)] = text##overridestub##n;
-
-#define initvtblwithstubs2(z, n, text) n##[(int (**)())(text.lpVtbl)] = text##overridestub2##n;
-
-#define createoverridestubs1(z, n, text) HRESULT text##overridestub##n(p, pp) \
-char *p, *pp;{ if(text##inner) pWebView2 = text##inner; return S_OK;}//return n##[(HRESULT (**)())text##inner->lpVtbl](text##inner, pp); \
-				else return S_OK; \
-}
-
-#define createoverridestubs2(z, n, text) HRESULT text##overridestub2##n(p, pp, ppp) \
-char *p, *pp, *ppp;{ return text##inner2 ? n##[(HRESULT (**)())text##inner2->lpVtbl](text##inner2, pp, ppp) : S_OK;}
+__x_Microsoft_CUI_CXaml_CControls_CIWebView2 * innerwebview2;
 
 __x_Microsoft_CUI_CXaml_CControls_CIWebView2* pWebView2 = 0;
 
-BOOST_PP_REPEAT(6, createoverridestubs1, webview2)
-
-BOOST_PP_REPEAT(6, createoverridestubs2, webview2)
+//BOOST_PP_REPEAT(6, defineoverridestubscommon, webview2)
 
 HRESULT QueryInterfaceWebView2Fact(This, riid, ppvObject)
 
@@ -506,7 +483,7 @@ static HRESULT Invokewebnavcompleted
 
 	IID* pIIDs;
 
-	webview2inner->lpVtbl->GetIids(sender, &iidcount, &pIIDs);
+	innerwebview2->lpVtbl->GetIids(sender, &iidcount, &pIIDs);
 
 	__x_Microsoft_CUI_CXaml_CControls_CIWebView2* pWebView;
 
@@ -622,17 +599,20 @@ const static IID* implementswebnavcompletedhandler[] = { &IID_IInspectable, &IID
 &IID_ICoreWebView2NavigationCompletedEventHandler, 0 };
 
 struct standardinterfacepart webnavcompletedhandler = {&webview2navcompletedhandler, implementswebnavcompletedhandler,
-	1, &webnavcompletedhandler, sizeof(char*),};
+	1, &webnavcompletedhandler,};
 
 
 IInspectable* initwebview2()
 {
+	//startinfintiteloop;
+	//Sleep(600000);
+	//*(char*)initwebview2 = 0;
 
 	__x_Microsoft_CUI_CXaml_CControls_CIWebView2Factory* pWebView2Fact;
 
 	IActivationFactory* pObjInspect;
 
-	BOOST_PP_REPEAT(6, initvtblwithstubs1, webview2)
+	//BOOST_PP_REPEAT(6, initvtblwithstubs, webview2)
 
 		HSTRING_HEADER headstr;
 
@@ -649,18 +629,18 @@ IInspectable* initwebview2()
 		, 0, &pWebView2);
 
 
-	BOOST_PP_REPEAT(6, initvtblwithstubs2, webview2);
+	//BOOST_PP_REPEAT(6, initvtblwithstubs, webview2);
 
 	//webview2.lpVtbl->QueryInterface = QueryInterfaceWebView2Fact;
 
-	(pWebView2Fact)->lpVtbl->CreateInstance(pWebView2Fact, &webview2, &webview2inner2, &webview2inner);
+	//(pWebView2Fact)->lpVtbl->CreateInstance(pWebView2Fact, &webview2, &innerwebview2, &pWebView2);
 
 	//EventRegistrationToken sometoken;
 
 	//debug = webview2inner->lpVtbl->add_NavigationCompleted(webview2inner, &webnavcompletedhandler, &sometoken);
 
-	return webview2inner;
-
+	return pWebView2;
+/*
 	ULONG iidcount;
 
 	IID* pIIDs;
@@ -697,7 +677,7 @@ IInspectable* initwebview2()
 
 	//return pWebView2;
 	//activateclassdirect(RuntimeClass_Microsoft_UI_Xaml_Controls_WebView2, pWebView2, IID___x_Microsoft_CUI_CXaml_CControls_CIWebView2);
-	return webview2inner;
+	//return webview2inner;
 
 }
 
@@ -741,7 +721,7 @@ initmetadatastatics()
 	extern __x_Microsoft_CUI_CXaml_CControls_CIWebView2* pWebView2;
 
 #define common_beginning(i) &xamltypevtbl, xamltypeimplements, \
-	0, metadataglobal + i, sizeof(struct xamltypedata), \
+	1, metadataglobal + i, 0, \
 		i[metdatalocalclassnames], \
 		._fullName = i[metdatalocalclassnames], \
 		.baseTypeIndex = -1
@@ -785,7 +765,7 @@ initmetadatastatics()
 		.kindOfType = TypeKind_Metadata} };
 
 #define common_beginning(i) &xamlmembervtbl, xamlmemberimplements, \
-	0, metadatamembersglobal + i, sizeof(struct xamlmemberdata), \
+	1, metadatamembersglobal + i, 0, \
 		metdatalocalclassnames[i + 6 + 4], \
 		.name = metdatalocalclassnames[i + 6 + 4], \
 		.IsDependencyProperty = true

@@ -11,6 +11,7 @@
 //#include "onlywhatweneed.h
 #include <Microsoft.UI.Xaml.h>
 #include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
 #include <Unknwn.h>
 #include <windows.foundation.h>
 #include <Microsoft.UI.h>
@@ -21,18 +22,7 @@
 #include <combaseapi.h>
 #include <activation.h>
 
-#define startinfintiteloop for(;;)
-
-#define activateclassdirect(name, ptr, iid) activateclassdirect((name), sizeof (name), &(ptr), &(iid))
-
-#define activateclasslight(name, ptr, iid) activateclasslight((name), sizeof (name), &(ptr), &(iid))
-
-extern QueryInterface(), stub(), AddRef(), Release(), GetIids(),
-GetRuntimeClassName(), GetTrustLevel(), OnLaunched();
-
-extern HSTRING createreference();
-
-#define createreference(string, ref) createreference((string), sizeof (string), (&ref))
+#include "common.h"
 
 struct standardinterfacepart {
 	__x_Microsoft_CUI_CXaml_CIApplicationOverrides; const IID** implements;
@@ -57,18 +47,12 @@ struct appinterface {
 		};
 	};
 
-	char* pMarkEndInterface;
+	char* pMarkEndInterface; IInspectable* pinner;
 };
 
 __x_Microsoft_CUI_CXaml_CIApplication* pApp;
 __x_Microsoft_CUI_CXaml_CIApplicationOverrides* innerappoverrides;
-struct appinterface* pAppOutter;
-
-#define initvtblwithstubs(z, n, text) n##[(int (**)())(&##text##overridesvtbl)] = text##overridestub##n;
-
-#define createoverridestubs(z, n, text) HRESULT text##overridestub##n(p, pp, ppp) \
-char *p, *pp, *ppp;{ return inner##text##overrides ? \
-n##[(HRESULT (**)())inner##text##overrides->lpVtbl](inner##text##overrides, pp, ppp) : S_OK;}
+struct appinterface* outterappoverrides;
 
 static __x_Microsoft_CUI_CXaml_CIApplicationOverridesVtbl overridesvtbl;
 
@@ -76,7 +60,9 @@ static __x_Microsoft_CUI_CXaml_CIApplicationOverridesVtbl overridesvtbl;
 
 const size_t noverrides = sizeof * innerappoverrides->lpVtbl / sizeof(char (*)()) - 6;
 
-BOOST_PP_REPEAT(16, createoverridestubs, app)
+//BOOST_PP_REPEAT(16, declareoverridestubs, (appoverrides, 6))
+
+//BOOST_PP_REPEAT(6, defineoverridestubscommon, appoverrides)
 
 __x_Microsoft_CUI_CXaml_CIWindow* pCoreWindow;
 
@@ -125,12 +111,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	HRESULT debug = RoGetActivationFactory(createreference(RuntimeClass_Microsoft_UI_Xaml_Controls_XamlControlsResources, strhead), &IID_IActivationFactory, &pxamlcontrolsresActivFactory);
 
-	initmetadatastatics(), initmainpagestatics();
+	initmetadatastatics(), initmainpagestatics(), initfilestatics();
 
 	extern GetXamlType(), GetXamlTypeByFullName(), GetXmlnsDefinitions();
 
 	static __x_Microsoft_CUI_CXaml_CIApplicationOverridesVtbl appoverridesvtbl =
-	{ QueryInterface, AddRef, Release, GetIids, GetRuntimeClassName, GetTrustLevel, };
+	{ QueryInterfaceWithInner, AddRef, Release, GetIids, GetRuntimeClassName, GetTrustLevel, };
 
 	static __x_Microsoft_CUI_CXaml_CMarkup_CIXamlMetadataProviderVtbl appmetadataprovidervtbl = {
 		QueryInterface, AddRef, Release, GetIids, GetRuntimeClassName, GetTrustLevel, GetXamlType,
@@ -143,9 +129,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 	const static IID* implementsappmetadataprovider[] = { &IID___x_Microsoft_CUI_CXaml_CMarkup_CIXamlMetadataProvider,
 	&IID_IUnknown, &IID_IInspectable,&IID_IAgileObject, 0 };
 
-	BOOST_PP_REPEAT(16, initvtblwithstubs, app);
+	BOOST_PP_REPEAT(10, initvtblwithstubs, (6, appoverrides));
 
-	appoverridesvtbl.QueryInterface = QueryInterfaceApp;
+	extern
+		HRESULT OnLaunched(
+			__x_Microsoft_CUI_CXaml_CIApplicationOverrides * This,
+			/* [in] */__x_Microsoft_CUI_CXaml_CILaunchActivatedEventArgs * args
+		);
+
+	//appoverridesvtbl.QueryInterface = QueryInterfaceApp;
 	appoverridesvtbl.OnLaunched = OnLaunched;
 	appoverridesvtbl.OnWindowCreated = OnWindowCreated;
 
@@ -156,20 +148,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 	const static IID* implementsstartcallback[] = { &IID___x_Microsoft_CUI_CXaml_CIApplicationInitializationCallback,
 	&IID_IUnknown,&IID_IAgileObject, 0 };
 
-	struct appinterface appinterface = { &appoverridesvtbl , implementsappoverrides , 1, &appinterface, sizeof(char*),
+	struct appinterface appinterface = { &appoverridesvtbl , implementsappoverrides , 1, &appinterface, 0,
 		createreference(L"CBackBone_6a4h8_Microsoft.UI.Xaml.IApplicationOverrides", stringheadappoverridesimpl), 0,
-	&appmetadataprovidervtbl,  implementsappmetadataprovider, 1, &appinterface, sizeof(char*),
+	&appmetadataprovidervtbl,  implementsappmetadataprovider, 1, &appinterface, 0,
 	createreference(L"CBackBone_6a4h8_Microsoft.UI.Xaml.Markup.IXamlMetadataProvider", stringgeadappmetadataprovider), 0,
 	&appstartcallbackvtbl, implementsstartcallback, 1,&appinterface,
-		sizeof(char*), };
+		0, };
 
-	pAppOutter = &appinterface;
+	outterappoverrides = &appinterface;
 
 	__x_Microsoft_CUI_CXaml_CIApplicationFactory* pAppFact;
 
 	activateclassdirect(RuntimeClass_Microsoft_UI_Xaml_Application, pAppFact, IID___x_Microsoft_CUI_CXaml_CIApplicationFactory);
 
-	__x_Microsoft_CUI_CXaml_CIApplicationFactory_CreateInstance(pAppFact, &appinterface, &innerappoverrides, &pApp);
+	__x_Microsoft_CUI_CXaml_CIApplicationFactory_CreateInstance(pAppFact, &appinterface, &appinterface.pinner, &pApp);
 
 	__x_Microsoft_CUI_CXaml_CIApplicationStatics* pAppStatics;
 

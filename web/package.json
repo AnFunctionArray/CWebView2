@@ -1,0 +1,24 @@
+{
+  "name": "projectwebgpu",
+  "version": "0.2.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "gl-matrix": "^3.2.1",
+    "@webgpu/glslang": "^0.0.15"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsld/ProjectWebGPU.git"
+  },
+  "keywords": [
+    "WebGPU"
+  ],
+  "author": "sasho648",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bsld/ProjectWebGPU/issues"
+  },
+  "homepage": "https://github.com/bsld/ProjectWebGPU#readme"
+}
