@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@webgpu/glslang": "^0.0.15",
     "gl-matrix": "^3.2.1",
-    "@webgpu/glslang": "^0.0.15"
+    "js-base64": "^3.4.5"
   },
   "devDependencies": {},
   "repository": {

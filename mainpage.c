@@ -61,17 +61,35 @@ extern struct standardinterfacepart* outtermainframe;
 int callbackonfilecollected(struct szandbuffer { UINT32 size; wchar_t* pData; } data,
 	ICoreWebView2* pWebView2, HSTRING filename)
 {
+	UINT32 filenamelen;
+
+	wchar_t* pfilename = WindowsGetStringRawBuffer(filename, &filenamelen);
+
+	const size_t basesize = filenamelen + sizeof L"{:";
+
 	char* out = malloc(data.size + sizeof(wchar_t) * 50);
 	z_stream strm = { .avail_in = data.size , .next_in = data.pData,
-	.avail_out = data.size + sizeof(wchar_t) * 50, .next_out = out };
+	.avail_out = data.size + sizeof(wchar_t) * 50, .next_out = out};
 
-	deflateInit(&strm, Z_DEFAULT_COMPRESSION);
+	deflateInit(&strm, Z_BEST_COMPRESSION);
 
 	int err; HRESULT debug;
 
 	err = deflate(&strm, Z_NO_FLUSH);
 
 	deflateEnd(&strm);
+
+#if 0
+
+	size_t sztotal = (strm.total_out + 2 - 1) / 2;
+
+	sztotal *= 2;
+
+	if (sztotal > strm.total_out)
+		0[out + strm.total_out] = '\xFF';
+
+	*(wchar_t*)(out + sztotal) = L'\0';
+#endif
 
 	__x_ABI_CWindows_CSecurity_CCryptography_CICryptographicBufferStatics* pcryptostatics;
 
@@ -83,6 +101,16 @@ int callbackonfilecollected(struct szandbuffer { UINT32 size; wchar_t* pData; } 
 	__x_ABI_CWindows_CStorage_CStreams_CIBuffer* poutbuff;
 
 	pcryptostatics->lpVtbl->CreateFromByteArray(pcryptostatics, strm.total_out, out, &poutbuff);
+
+	HSTRING base64;
+
+	pcryptostatics->lpVtbl->EncodeToBase64String(pcryptostatics, poutbuff, &base64);
+
+	UINT32 base64strlen;
+
+	wchar_t* base64strraw = WindowsGetStringRawBuffer(base64, &base64strlen);
+
+	pcryptostatics->lpVtbl->ConvertStringToBinary(pcryptostatics, base64, BinaryStringEncoding_Utf16LE, &poutbuff);
 
 	activateclassdirect(RuntimeClass_Windows_Security_Cryptography_Core_HashAlgorithmProvider,
 		phashstatics, IID___x_ABI_CWindows_CSecurity_CCryptography_CCore_CIHashAlgorithmProviderStatics);
@@ -112,17 +140,26 @@ int callbackonfilecollected(struct szandbuffer { UINT32 size; wchar_t* pData; } 
 
 	wchar_t* phashinhexstr = WindowsGetStringRawBuffer(hashinhexstr, &hashinhexlen);
 
-	UINT32 filenamelen;
-
-	wchar_t* pfilename = WindowsGetStringRawBuffer(filename, &filenamelen);
-
 	const resultszbuffer = filenamelen + hashinhexlen + sizeof L'0' * 10;
 
 	wchar_t* pResult = malloc(resultszbuffer);
 
+	//swprintf(pResult, resultszbuffer, L"{\"%s\":\"content:%s\"}", pfilename, phashinhexstr);
+
 	swprintf(pResult, resultszbuffer, L"%s:%s", pfilename, phashinhexstr);
 
-	debug = pWebView2->lpVtbl->PostWebMessageAsString(pWebView2, pResult);
+	//startinfintiteloop;
+
+	debug = pWebView2->lpVtbl->Reload(pWebView2, pResult);
+
+	size_t szlen;
+
+	//assert(szlen = wcslen(out));
+
+	pWebView2->lpVtbl->Reload(pWebView2, base64strraw);
+
+	//for (size_t chunk = 0; chunk < strm.avail_out; chunk += (szlen + 1) * sizeof(wchar_t))
+		//assert(szlen = wcslen(out + chunk)), debug = pWebView2->lpVtbl->Reload(pWebView2, out + chunk);
 }
 
 HRESULT InvokeWebView2WebMsgRecieved(ICoreWebView2WebMessageReceivedEventHandler* This,
@@ -172,9 +209,11 @@ HRESULT InvokeWebView2StartNavigation(__RPC__in __FITypedEventHandler_2_Microsof
 
 	ICoreWebView2* pCoreWebView2 = getcorewebview2(sender);
 
-	pCoreWebView2->lpVtbl->OpenDevToolsWindow(pCoreWebView2);
-
-	getbufferandsizeAsync(createreference(L"register.js", headjs), onloadedregisterjs, pCoreWebView2);
+#ifdef _DEBUG
+	((HRESULT (*)())pCoreWebView2->lpVtbl->AddHostObjectToScript)(pCoreWebView2);
+#endif
+	//Sleep(5000);
+	//getbufferandsizeAsync(createreference(L"register.js", headjs), onloadedregisterjs, pCoreWebView2);
 
 	return S_OK;
 }
@@ -307,7 +346,7 @@ HRESULT OnLaunched(
 
 	__x_ABI_CWindows_CFoundation_CIPropertyValueStatics* pPropValueStatics;
 
-	IInspectable* somearbitraryobject;
+	__x_ABI_CWindows_CFoundation_CIPropertyValue* somearbitraryobject;
 	static HSTRING_HEADER headpagename, headepagename1;
 
 	activateclassdirect(RuntimeClass_Windows_Foundation_PropertyValue, pPropValueStatics, IID___x_ABI_CWindows_CFoundation_CIPropertyValueStatics);

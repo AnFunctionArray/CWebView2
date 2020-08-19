@@ -7,11 +7,26 @@
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
       <DeploymentContent>true</DeploymentContent>
     </_CustomResource>
+    <_CustomResourcezlibd Include=".\packages\zlib_native.redist.1.2.11\build\native\bin\x64\Debug\**\*">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <DeploymentContent>true</DeploymentContent>
+    </_CustomResourcezlibd>
+    <_CustomResourcezlib Include=".\packages\zlib_native.redist.1.2.11\build\native\bin\x64\Release\**\*">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <DeploymentContent>true</DeploymentContent>
+    </_CustomResourcezlib>
+    <_CustomResourceassets Include=".\Assets\**\*">
+      <Link>.\Assets\%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <DeploymentContent>true</DeploymentContent>
+    </_CustomResourceassets>
   </ItemGroup>
   <Target Name="_CollectCustomResources" BeforeTargets="AssignTargetPaths">
     <Message Text="Adding resource: %(_CustomResource.Identity) -&gt; %(_CustomResource.Link)" />
     <ItemGroup>
       <None Include="@(_CustomResource)" />
+      <None Include="@(_CustomResourceassets)" />
+      <None Include="@(_CustomResourcezlib)" Condition="'$(Configuration)|$(Platform)'=='Release|x64'"/>
+      <None Include="@(_CustomResourcezlibd)" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"/>
     </ItemGroup>
   </Target>
   <PropertyGroup />

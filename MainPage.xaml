@@ -8,5 +8,5 @@
     mc:Ignorable="d">
 
     <WebView2 x:Name="MyWebView" x:ConnectionId="2"
-        Source="about:blank" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        Source="https://localhost/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 </Page>

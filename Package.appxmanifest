@@ -3,7 +3,7 @@
   <Identity
     Name="3135a4ef-473e-43fd-80a9-257e5b9832fa"
     Publisher="CN=sasho"
-    Version="1.0.0.0" />
+    Version="1.0.2.0" />
   <mp:PhoneIdentity PhoneProductId="3135a4ef-473e-43fd-80a9-257e5b9832fa" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
   <Properties>
     <DisplayName>CBackBone</DisplayName>
